@@ -1,0 +1,24 @@
+{
+  "name": "clean-ddd-ignite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DinizEduardo/clean-ddd-ignite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DinizEduardo/clean-ddd-ignite/issues"
+  },
+  "homepage": "https://github.com/DinizEduardo/clean-ddd-ignite#readme",
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6"
+  }
+}
