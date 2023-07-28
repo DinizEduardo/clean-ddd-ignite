@@ -4,7 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import dayjs from 'dayjs'
 import { Slug } from './value-objects/slug'
 
-interface QuestionProps {
+export interface QuestionProps {
   title: string
   content: string
   authorId: UniqueEntityID
