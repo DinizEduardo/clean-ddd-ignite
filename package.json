@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/DinizEduardo/clean-ddd-ignite#readme",
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@rocketseat/eslint-config": "^2.1.0",
     "@types/node": "^20.4.5",
     "eslint": "^8.45.0",
