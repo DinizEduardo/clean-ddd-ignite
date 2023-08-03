@@ -3,6 +3,8 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeQuestion } from 'test/factories/make-question'
 import { InMemoryQuestionRepositories } from 'test/repositories/in-memory-question-repositories'
 import { EditQuestionUseCase } from './edit-question'
+import { NotAllowedError } from './errors/not-allowed-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 let inMemoryQuestionsRepository: InMemoryQuestionRepositories
 let sut: EditQuestionUseCase
@@ -46,14 +48,15 @@ describe('Edit question', () => {
 
     await inMemoryQuestionsRepository.create(newQuestion)
 
-    await expect(async () => {
-      await sut.execute({
-        questionId: 'question-1',
-        authorId: 'author-2',
-        title: 'Pergunta teste',
-        content: 'Conteudo teste',
-      })
-    }).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      questionId: 'question-1',
+      authorId: 'author-2',
+      title: 'Pergunta teste',
+      content: 'Conteudo teste',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(NotAllowedError)
 
     expect(inMemoryQuestionsRepository.items).toHaveLength(1)
   })
@@ -68,14 +71,15 @@ describe('Edit question', () => {
 
     await inMemoryQuestionsRepository.create(newQuestion)
 
-    await expect(async () => {
-      await sut.execute({
-        questionId: 'question-2',
-        authorId: 'author-1',
-        title: 'Pergunta teste',
-        content: 'Conteudo teste',
-      })
-    }).rejects.toBeInstanceOf(Error)
+    const result = await sut.execute({
+      questionId: 'question-2',
+      authorId: 'author-1',
+      title: 'Pergunta teste',
+      content: 'Conteudo teste',
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
 
     expect(inMemoryQuestionsRepository.items).toHaveLength(1)
   })
