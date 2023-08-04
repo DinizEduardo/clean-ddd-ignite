@@ -1,17 +1,25 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeQuestion } from 'test/factories/make-question'
+import { makeQuestionAttachment } from 'test/factories/make-question-attachment'
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
 import { InMemoryQuestionRepositories } from 'test/repositories/in-memory-question-repositories'
 import { DeleteQuestionUseCase } from './delete-question'
 import { NotAllowedError } from './errors/not-allowed-error'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 let inMemoryQuestionsRepository: InMemoryQuestionRepositories
+let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttachmentsRepository
 let sut: DeleteQuestionUseCase
 
 describe('Delete question by id', () => {
   beforeEach(() => {
-    inMemoryQuestionsRepository = new InMemoryQuestionRepositories()
+    inMemoryQuestionAttachmentRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionsRepository = new InMemoryQuestionRepositories(
+      inMemoryQuestionAttachmentRepository,
+    )
+
     sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository)
   })
 
@@ -25,12 +33,24 @@ describe('Delete question by id', () => {
 
     await inMemoryQuestionsRepository.create(newQuestion)
 
+    inMemoryQuestionAttachmentRepository.items.push(
+      makeQuestionAttachment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityID('1'),
+      }),
+      makeQuestionAttachment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityID('2'),
+      }),
+    )
+
     await sut.execute({
       questionId: 'question-1',
       authorId: 'author-1',
     })
 
     expect(inMemoryQuestionsRepository.items).toHaveLength(0)
+    expect(inMemoryQuestionAttachmentRepository.items).toHaveLength(0)
   })
 
   it('should not be able to delete a question from another user', async () => {

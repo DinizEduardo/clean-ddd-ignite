@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { makeQuestion } from 'test/factories/make-question'
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
 import { InMemoryQuestionCommentsRepository } from 'test/repositories/in-memory-question-comments-repository'
 import { InMemoryQuestionRepositories } from 'test/repositories/in-memory-question-repositories'
 import { CommentOnQuestionUseCase } from './comment-on-question'
@@ -7,13 +8,18 @@ import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 let inMemoryQuestionCommentsRepository: InMemoryQuestionCommentsRepository
 let inMemoryQuestionRepository: InMemoryQuestionRepositories
+let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttachmentsRepository
 let sut: CommentOnQuestionUseCase
 
 describe('Comment on question', () => {
   beforeEach(() => {
     inMemoryQuestionCommentsRepository =
       new InMemoryQuestionCommentsRepository()
-    inMemoryQuestionRepository = new InMemoryQuestionRepositories()
+    inMemoryQuestionAttachmentRepository =
+      new InMemoryQuestionAttachmentsRepository()
+    inMemoryQuestionRepository = new InMemoryQuestionRepositories(
+      inMemoryQuestionAttachmentRepository,
+    )
     sut = new CommentOnQuestionUseCase(
       inMemoryQuestionRepository,
       inMemoryQuestionCommentsRepository,
